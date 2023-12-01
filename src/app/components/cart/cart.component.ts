@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Item } from '../../models/item';
 import { ItemService } from '../../service/item.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AppComponent } from '../../app.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,16 +8,20 @@ import { CommonModule } from '@angular/common';
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
   standalone : true,
-  imports: [CommonModule]
+  imports: [CommonModule,]
 
 })
 export class CartComponent implements OnInit{
 
   items : Item[] = [];
+  @Input() quantities: number[] = [];
+
+  @Input() cartItems : Item[] = [];
+  @ViewChildren('quantityInput') quantityInputs!: QueryList<ElementRef>;
 
   constructor(public service : ItemService) {
-
   }
+
 
   ngOnInit(): void {
     this.getItems();
@@ -32,4 +34,12 @@ export class CartComponent implements OnInit{
     })
   }
 
+  addCart() {
+    const quantities: number[] = [];
+    this.quantityInputs.forEach((input: ElementRef) => {
+      quantities.push(+input.nativeElement.value);
+    });
+
+    console.log(quantities);
+  }
 }
